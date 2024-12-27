@@ -33,11 +33,11 @@ public class JogoDaVelha extends JFrame {
         if (nextInt == 1) {
             jogador1 = true;
             jogador2 = false;
-            JOptionPane.showMessageDialog(null, "Jogador 1 começa");
+            JOptionPane.showMessageDialog(null, "Jogador 1 comeca");
         } else {
             jogador2 = true;
             jogador1 = false;
-            JOptionPane.showMessageDialog(null, "Jogador 2 começa");
+            JOptionPane.showMessageDialog(null, "Jogador 2 comeca");
         }
         new MarcacaoCamposZerada(marcacaoMap);
 
@@ -323,7 +323,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(1) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(1) == marcacaoMap.get(4) && marcacaoMap.get(4) == marcacaoMap.get(7)
                 && marcacaoMap.get(1) != 0 && marcacaoMap.get(4) != 0 && marcacaoMap.get(7) != 0) {
@@ -332,7 +332,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(1) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(1) == marcacaoMap.get(5) && marcacaoMap.get(5) == marcacaoMap.get(9)
                 && marcacaoMap.get(1) != 0 && marcacaoMap.get(5) != 0 && marcacaoMap.get(9) != 0) {
@@ -341,7 +341,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(1) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(2) == marcacaoMap.get(5) && marcacaoMap.get(5) == marcacaoMap.get(8)
                 && marcacaoMap.get(2) != 0 && marcacaoMap.get(5) != 0 && marcacaoMap.get(8) != 0) {
@@ -350,7 +350,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(2) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(3) == marcacaoMap.get(5) && marcacaoMap.get(5) == marcacaoMap.get(7)
                 && marcacaoMap.get(3) != 0 && marcacaoMap.get(5) != 0 && marcacaoMap.get(7) != 0) {
@@ -359,7 +359,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(3) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(3) == marcacaoMap.get(6) && marcacaoMap.get(6) == marcacaoMap.get(9)
                 && marcacaoMap.get(3) != 0 && marcacaoMap.get(6) != 0 && marcacaoMap.get(9) != 0) {
@@ -368,7 +368,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(3) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(4) == marcacaoMap.get(5) && marcacaoMap.get(5) == marcacaoMap.get(6)
                 && marcacaoMap.get(4) != 0 && marcacaoMap.get(5) != 0 && marcacaoMap.get(6) != 0) {
@@ -377,7 +377,7 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(4) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (marcacaoMap.get(7) == marcacaoMap.get(8) && marcacaoMap.get(8) == marcacaoMap.get(9)
                 && marcacaoMap.get(7) != 0 && marcacaoMap.get(8) != 0 && marcacaoMap.get(9) != 0) {
@@ -386,10 +386,10 @@ public class JogoDaVelha extends JFrame {
             } else if (marcacaoMap.get(7) == 2) {
                 jogador = "Jogador 2 Ganhou";
             }
-            JOptionPane.showMessageDialog(null, "Parabéns! " + jogador);
+            JOptionPane.showMessageDialog(null, "Parabens! " + jogador);
             System.exit(0);
         } else if (contador == 9) {
-            JOptionPane.showMessageDialog(null, "Infelizmente não houve ganhador");
+            JOptionPane.showMessageDialog(null, "Infelizmente nao houve ganhador");
             System.exit(0);
         }
     }
