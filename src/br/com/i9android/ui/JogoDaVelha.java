@@ -35,9 +35,8 @@ public class JogoDaVelha extends JFrame {
     /**
      * Variáveis de controle para verificar quais campos estão marcados por "O" ou "X".
      */
-    protected boolean oliberar11, oliberar12, oliberar13, oliberar21, oliberar22, oliberar23,
-            oliberar31, oliberar32, oliberar33, xliberar11, xliberar12, xliberar13, xliberar21, xliberar22,
-            xliberar23, xliberar31, xliberar32, xliberar33 = false;
+
+    HashMap<Integer, Boolean> liberacaoMap = new HashMap<>();
     /**
     * Mapeamento das marcações feitas pelos jogadores.
     * O índice da célula é associado ao jogador (1 para jogador 1, 2 para jogador 2).
@@ -56,19 +55,14 @@ public class JogoDaVelha extends JFrame {
     * e configura a interface gráfica e os eventos de clique do mouse.
     */
     public JogoDaVelha() {
+
         setTitle("Jogo da Velha");
-        Random numero = new Random();
-        int nextInt = numero.nextInt(2);
-        if (nextInt == 1) {
-            jogador1 = true;
-            jogador2 = false;
-            JOptionPane.showMessageDialog(null, "Jogador 1 comeca");
-        } else {
-            jogador2 = true;
-            jogador1 = false;
-            JOptionPane.showMessageDialog(null, "Jogador 2 comeca");
-        }
-        new MarcacaoCamposZerada(marcacaoMap);
+        
+        determinarJogadorInicial();
+        
+        MarcacaoCamposZerada.inicializar(marcacaoMap);
+        
+        MarcacaoCamposZerada.iniciarJogadas(liberacaoMap);
 
         JPanel painel = new JPanel() {
             private Graphics2D graphics2d;
@@ -77,10 +71,10 @@ public class JogoDaVelha extends JFrame {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 graphics2d = (Graphics2D) g;
-                desenharTela(graphics2d);
+                desenharTabuleiro(graphics2d);
                 // Marcar O ou X
                 marcaCampo(graphics2d, coordenadaX, coordenadaY);
-                marcarJogadorNaTela(graphics2d);
+                desenharJogadores(graphics2d);
                 deixarPermanente(graphics2d);
 
             }
@@ -124,29 +118,30 @@ public class JogoDaVelha extends JFrame {
      * 
      * @param graphics2d Objeto usado para desenhar os elementos gráficos.
      */
-    protected void desenharTela(Graphics2D graphics2d) {
+    protected void desenharTabuleiro(Graphics2D graphics2d) {
         BasicStroke stroke = new BasicStroke(3.0f);
         graphics2d.setStroke(stroke);
         graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2d.setColor(new Color(128, 43, 160));
         graphics2d.drawRect(5, 5, 600, 600);
-        graphics2d.drawLine(200, 5, 200, 602);
-        graphics2d.drawLine(400, 5, 400, 602);
-        graphics2d.drawLine(4, 200, 602, 200);
-        graphics2d.drawLine(4, 400, 602, 400);
+        // Desenha as linhas internas
+        for (int i = 1; i <= 2; i++) {
+            graphics2d.drawLine(200 * i, 5, 200 * i, 605); // Linhas verticais
+            graphics2d.drawLine(5, 200 * i, 605, 200 * i); // Linhas horizontais
+        }
     }
     /**
      * Exibe os nomes dos jogadores na interface do jogo.
      * 
      * @param graphics2d Objeto usado para desenhar os textos na tela.
      */
-    protected void marcarJogadorNaTela(Graphics2D graphics2d) {
+    protected void desenharJogadores(Graphics2D graphics2d) {
         graphics2d.drawString("Jogadores", 30.0f, 20.0f);
         graphics2d.setColor(new Color(254, 10, 10));
-        graphics2d.drawString("Jogador 1", 20.0f, 40.0f);
+        graphics2d.drawString("Jogador 1 (O)", 20.0f, 40.0f);
         graphics2d.setColor(new Color(10, 10, 254));
-        graphics2d.drawString("Jogador 2", 80.0f, 40.0f);
+        graphics2d.drawString("Jogador 2 (X)", 100.0f, 40.0f);
     }
     /**
      * Mantém as marcações de "X" ou "O" no tabuleiro após a jogada.
@@ -155,87 +150,34 @@ public class JogoDaVelha extends JFrame {
      */
     protected void deixarPermanente(Graphics2D graphics2d) {
         // Código desenha "X" ou "O" de acordo com as marcações armazenadas.
-        if (oliberar11 & marcacaoMap.get(1) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(50, 50, 100, 100);
-        }
-        if (oliberar12 & marcacaoMap.get(2) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(250, 50, 100, 100);
-        }
-        if (oliberar13 & marcacaoMap.get(3) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(450, 50, 100, 100);
-        }
-        if (oliberar21 & marcacaoMap.get(4) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(50, 250, 100, 100);
-        }
-        if (oliberar22 & marcacaoMap.get(5) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(250, 250, 100, 100);
-        }
-        if (oliberar23 & marcacaoMap.get(6) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(450, 250, 100, 100);
-        }
-        if (oliberar31 & marcacaoMap.get(7) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(50, 450, 100, 100);
-        }
-        if (oliberar32 & marcacaoMap.get(8) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(250, 450, 100, 100);
-        }
-        if (oliberar33 & marcacaoMap.get(9) == 1) {
-            graphics2d.setColor(new Color(254, 10, 10));
-            graphics2d.drawOval(450, 450, 100, 100);
-        }
-
-        if (xliberar11 & marcacaoMap.get(1) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(50, 50, 150, 150);
-            graphics2d.drawLine(150, 50, 50, 150);
-        }
-        if (xliberar12 & marcacaoMap.get(2) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(250, 50, 350, 150);
-            graphics2d.drawLine(350, 50, 250, 150);
-        }
-        if (xliberar13 & marcacaoMap.get(3) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(450, 50, 550, 150);
-            graphics2d.drawLine(550, 50, 450, 150);
-        }
-        if (xliberar21 & marcacaoMap.get(4) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(50, 250, 150, 350);
-            graphics2d.drawLine(150, 250, 50, 350);
-        }
-        if (xliberar22 & marcacaoMap.get(5) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(250, 250, 350, 350);
-            graphics2d.drawLine(350, 250, 250, 350);
-        }
-        if (xliberar23 & marcacaoMap.get(6) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(450, 250, 550, 350);
-            graphics2d.drawLine(550, 250, 450, 350);
-        }
-        if (xliberar31 & marcacaoMap.get(7) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(50, 450, 150, 550);
-            graphics2d.drawLine(150, 450, 50, 550);
-        }
-        if (xliberar32 & marcacaoMap.get(8) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(250, 450, 350, 550);
-            graphics2d.drawLine(350, 450, 250, 550);
-        }
-        if (xliberar33 & marcacaoMap.get(9) == 2) {
-            graphics2d.setColor(new Color(10, 10, 254));
-            graphics2d.drawLine(450, 450, 550, 550);
-            graphics2d.drawLine(550, 450, 450, 550);
+        for(int i = 0; i<3; i++){
+            if(liberacaoMap.get(i+1)==true&&marcacaoMap.get(i+1)==1){
+                graphics2d.setColor(new Color(254, 10, 10));
+                graphics2d.drawOval(i*200 + 50, 50, 100, 100);
+            }
+            if (liberacaoMap.get(i+4)==true && marcacaoMap.get(i+4) == 1) {
+                graphics2d.setColor(new Color(254, 10, 10));
+                graphics2d.drawOval(i*200+50, 250, 100, 100);
+            }
+            if (liberacaoMap.get(i+7)==true && marcacaoMap.get(i+7) == 1) {
+                graphics2d.setColor(new Color(254, 10, 10));
+                graphics2d.drawOval(i*200+50, 450, 100, 100);
+            }
+            if(liberacaoMap.get(i+10)==true&&marcacaoMap.get(i+1)==2){
+                graphics2d.setColor(new Color(10, 10, 254));
+                graphics2d.drawLine(i*200+50, 50, i*200+150, 150);
+                graphics2d.drawLine(i*200+150, 50, i*200+50, 150);
+            }
+            if (liberacaoMap.get(i+13)==true && marcacaoMap.get(i+4) == 2) {
+                graphics2d.setColor(new Color(10, 10, 254));
+                graphics2d.drawLine(i*200+50, 250, i*200+150, 350);
+                graphics2d.drawLine(i*200+150, 250, i*200+50, 350);
+            }
+            if (liberacaoMap.get(i+16)==true && marcacaoMap.get(i+7) == 2) {
+                graphics2d.setColor(new Color(10, 10, 254));
+                graphics2d.drawLine(i*200+50, 450, i*200+150, 550);
+                graphics2d.drawLine(i*200+150, 450, i*200+50, 550);
+            }
         }
     }
      /**
@@ -258,9 +200,9 @@ public class JogoDaVelha extends JFrame {
             // marcacao |1 1|
             contagem = 1;
             if (jogador1 == true) {
-                oliberar11 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar11 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -269,9 +211,9 @@ public class JogoDaVelha extends JFrame {
             // marcacao |1 2|
             contagem = 2;
             if (jogador1 == true) {
-                oliberar12 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar12 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -280,9 +222,9 @@ public class JogoDaVelha extends JFrame {
             // marcacao |1 3|
             contagem = 3;
             if (jogador1 == true) {
-                oliberar13 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar13 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -291,9 +233,9 @@ public class JogoDaVelha extends JFrame {
         if (coordenadaX > 5 && coordenadaX < 200 && coordenadaY > 205 && coordenadaY < 400) {
             contagem = 4;
             if (jogador1 == true) {
-                oliberar21 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar21 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -302,9 +244,9 @@ public class JogoDaVelha extends JFrame {
             // marcacao |2 2|
             contagem = 5;
             if (jogador1 == true) {
-                oliberar22 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar22 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -313,21 +255,21 @@ public class JogoDaVelha extends JFrame {
             // marcacao |2 3|
             contagem = 6;
             if (jogador1 == true) {
-                oliberar23 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar23 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
         }
-
+        
         if (coordenadaX > 5 && coordenadaX < 200 && coordenadaY > 405 && coordenadaY < 600) {
             // marcacao |3 1|
             contagem = 7;
             if (jogador1 == true) {
-                oliberar31 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar31 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -336,9 +278,9 @@ public class JogoDaVelha extends JFrame {
             // marcacao |3 2|
             contagem = 8;
             if (jogador1 == true) {
-                oliberar32 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar32 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -347,9 +289,9 @@ public class JogoDaVelha extends JFrame {
             // marcacao |3 3|
             contagem = 9;
             if (jogador1 == true) {
-                oliberar33 = true;
+                liberacaoMap.put(contagem, true);
             } else if (jogador2 == true) {
-                xliberar33 = true;
+                liberacaoMap.put(contagem+9, true);
             }
             marcarContagem(contagem);
             mudarJogador();
@@ -450,6 +392,20 @@ public class JogoDaVelha extends JFrame {
         } else if (contador == 9) {
             JOptionPane.showMessageDialog(null, "Infelizmente nao houve ganhador");
             System.exit(0);
+        }
+    }
+
+    private void determinarJogadorInicial() {
+        Random numero = new Random();
+        int nextInt = numero.nextInt(2);
+        if (nextInt == 1) {
+            jogador1 = true;
+            jogador2 = false;
+            JOptionPane.showMessageDialog(null, "Jogador 1 comeca");
+        } else {
+            jogador2 = true;
+            jogador1 = false;
+            JOptionPane.showMessageDialog(null, "Jogador 2 comeca");
         }
     }
 }
